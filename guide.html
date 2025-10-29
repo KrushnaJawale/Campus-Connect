@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Ultimate Git Command Guide</title>
+    <style>
+        /* --- Google Fonts --- */
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Fira+Code:wght@400;600&display=swap');
+
+        /* --- CSS Variables (Theme) --- */
+        :root {
+            --bg-color: #1a1b26;
+            --main-color: #24283b;
+            --text-color: #c0caf5;
+            --accent-color: #7aa2f7;
+            --green-color: #9ece6a;
+            --orange-color: #ff9e64;
+            --red-color: #f7768e;
+            --code-bg: #292e42;
+            --border-color: #414868;
+        }
+
+        /* --- General Styles & Reset --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.7;
+            display: flex;
+        }
+
+        /* --- Layout --- */
+        .sidebar {
+            width: 240px;
+            position: sticky;
+            top: 0;
+            height: 100vh;
+            background-color: var(--main-color);
+            padding: 2rem 1rem;
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+        }
+
+        .main-content {
+            flex-grow: 1;
+            padding: 2rem 3rem;
+        }
+
+        /* --- Sidebar Navigation --- */
+        .sidebar h2 {
+            font-size: 1.2rem;
+            color: var(--accent-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        .sidebar ul {
+            list-style: none;
+        }
+
+        .sidebar li a {
+            display: block;
+            color: var(--text-color);
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+
+        .sidebar li a:hover {
+            background-color: var(--code-bg);
+            color: var(--accent-color);
+        }
+
+        /* --- Header --- */
+        header {
+            text-align: center;
+            margin-bottom: 4rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 2rem;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            color: var(--accent-color);
+            margin-bottom: 0.5rem;
+        }
+
+        header p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto;
+            color: #a9b1d6;
+        }
+
+        /* --- Section Styling --- */
+        .command-section {
+            margin-bottom: 4rem;
+        }
+
+        .command-section h2 {
+            font-size: 2rem;
+            color: var(--green-color);
+            margin-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 0.5rem;
+        }
+
+        /* --- Command Card Styling --- */
+        .command-card {
+            background-color: var(--main-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            margin-bottom: 2rem;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .command-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+        }
+
+        .command-header {
+            background-color: var(--code-bg);
+            padding: 0.75rem 1.5rem;
+            font-family: 'Fira Code', monospace;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--accent-color);
+        }
+        
+        .command-body {
+            padding: 1.5rem;
+        }
+
+        .command-body p {
+            margin-bottom: 1.5rem;
+        }
+
+        .command-body h4 {
+            font-size: 1rem;
+            color: var(--orange-color);
+            margin-bottom: 0.5rem;
+        }
+
+        /* --- Code Block Styling --- */
+        pre {
+            background-color: var(--code-bg);
+            color: #a9b1d6;
+            font-family: 'Fira Code', monospace;
+            padding: 1rem;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-size: 0.9rem;
+        }
+        
+        code {
+            font-family: 'Fira Code', monospace;
+        }
+        
+        pre span.comment {
+            color: #5c6370;
+        }
+
+        /* --- Responsive Design --- */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                height: auto;
+                position: static;
+                border-right: none;
+                border-bottom: 1px solid var(--border-color);
+            }
+            .main-content {
+                padding: 1.5rem;
+            }
+            header h1 {
+                font-size: 2.2rem;
+            }
+            .command-section h2 {
+                font-size: 1.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="sidebar">
+        <h2>Git Commands</h2>
+        <ul>
+            <li><a href="#setup">Setup & Config</a></li>
+            <li><a href="#create">Create Repositories</a></li>
+            <li><a href="#daily-workflow">The Daily Workflow</a></li>
+            <li><a href="#branching">Branching & Merging</a></li>
+            <li><a href="#remote">Remotes & Collaboration</a></li>
+            <li><a href="#inspect">Inspect & Compare</a></li>
+            <li><a href="#undo">Undo Changes</a></li>
+            <li><a href="#advanced">Advanced Tools</a></li>
+        </ul>
+    </nav>
+
+    <main class="main-content">
+        <header>
+            <h1>The Ultimate Git Command Guide 🚀</h1>
+            <p>A beautifully designed, quick-reference guide for the most common and useful Git commands. Navigate using the sidebar and master your version control workflow.</p>
+        </header>
+
+        <section id="setup" class="command-section">
+            <h2>Setup & Config</h2>
+            
+            <div class="command-card">
+                <div class="command-header">git config</div>
+                <div class="command-body">
+                    <p>Configure your Git installation. You can set user information, preferences, and aliases. Settings can be global (for all repos) or local (for the current repo).</p>
+                    
+                    <h4>Syntax</h4>
+                    <pre><code>git config [--global | --local] &lt;setting-name&gt; &lt;value&gt;</code></pre>
+
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Set your name and email globally (do this first!)</span>
+git config --global user.name "Your Name"
+git config --global user.email "youremail@example.com"
+
+<span class="comment"># Set the default branch name to 'main'</span>
+git config --global init.defaultBranch main
+
+<span class="comment"># List all settings</span>
+git config --list</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="create" class="command-section">
+            <h2>Create Repositories</h2>
+
+            <div class="command-card">
+                <div class="command-header">git init</div>
+                <div class="command-body">
+                    <p>Initializes a new Git repository. This creates a `.git` subdirectory in your current directory, which contains all the necessary repository files.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git init [directory-name]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Initialize a new repository in the current directory</span>
+git init
+
+<span class="comment"># Initialize a new repository inside a new directory named 'my-project'</span>
+git init my-project</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git clone</div>
+                <div class="command-body">
+                    <p>Creates a local copy (a "clone") of an existing remote repository. This is the most common way to start working on a project that already exists on a server like GitHub or GitLab.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git clone &lt;repository-url&gt; [directory-name]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Clone a project from GitHub</span>
+git clone https://github.com/owner/project-name.git
+
+<span class="comment"># Clone it and give the local folder a custom name</span>
+git clone https://github.com/owner/project-name.git my-cool-app</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="daily-workflow" class="command-section">
+            <h2>The Daily Workflow</h2>
+
+            <div class="command-card">
+                <div class="command-header">git status</div>
+                <div class="command-body">
+                    <p>Shows the current state of the working directory and the staging area. It lets you see which changes have been staged, which haven't, and which files aren't being tracked by Git.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git status</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash">git status</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git add</div>
+                <div class="command-body">
+                    <p>Adds changes from the working directory to the staging area (also known as the "index"). This is how you prepare a "snapshot" of changes that you want to include in your next commit.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git add &lt;file-name | directory-name&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Add a single file to the staging area</span>
+git add index.html
+
+<span class="comment"># Add all changes in the current directory and subdirectories</span>
+git add .
+
+<span class="comment"># Add all changes interactively</span>
+git add -p</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git commit</div>
+                <div class="command-body">
+                    <p>Records a snapshot of the staged changes to the project's history. Each commit is a permanent record with a unique ID and a descriptive message.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git commit -m "Descriptive message"</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Commit the staged changes with a short message</span>
+git commit -m "Feat: Add user login form"
+
+<span class="comment"># Stage all tracked files and commit in one step</span>
+git commit -a -m "Fix: Correct typo in page title"</code></pre>
+                </div>
+            </div>
+
+             <div class="command-card">
+                <div class="command-header">git rm</div>
+                <div class="command-body">
+                    <p>Removes files from the working directory and the staging area. It's like using `rm` on the file and then `git add` on the removal.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git rm &lt;file-name&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Delete a file and stage that deletion</span>
+git rm old-logo.png
+
+<span class="comment"># To only remove it from the repository but keep the local file</span>
+git rm --cached config.log</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="branching" class="command-section">
+            <h2>Branching & Merging</h2>
+
+            <div class="command-card">
+                <div class="command-header">git branch</div>
+                <div class="command-body">
+                    <p>Manages your branches. You can use it to list, create, or delete branches. A branch is an independent line of development.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git branch [branch-name]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># List all local branches (current one is marked with *)</span>
+git branch
+
+<span class="comment"># Create a new branch called 'new-feature'</span>
+git branch new-feature
+
+<span class="comment"># Delete a branch (use -D to force delete)</span>
+git branch -d new-feature</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git switch / git checkout</div>
+                <div class="command-body">
+                    <p>Switches to a different branch, changing the files in your working directory to match that branch's version. `git switch` is the modern, safer command for changing branches.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git switch &lt;branch-name&gt;
+git checkout &lt;branch-name&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Switch to the 'new-feature' branch</span>
+git switch new-feature
+
+<span class="comment"># Create a new branch and switch to it immediately</span>
+git switch -c another-feature
+<span class="comment"># The older way: git checkout -b another-feature</span></code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git merge</div>
+                <div class="command-body">
+                    <p>Joins two or more development histories together. Most often used to combine changes from a feature branch back into the main branch.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git merge &lt;branch-name&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># First, switch to the branch you want to merge INTO</span>
+git switch main
+
+<span class="comment"># Then, merge the other branch's changes into 'main'</span>
+git merge new-feature</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git rebase</div>
+                <div class="command-body">
+                    <p>Re-applies commits from one branch on top of another branch. This creates a cleaner, linear project history compared to a merge commit. **Warning:** Avoid rebasing public, shared branches.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git rebase &lt;base-branch-name&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># First, switch to the branch you want to rebase</span>
+git switch new-feature
+
+<span class="comment"># Rebase it onto the 'main' branch</span>
+<span class="comment"># This moves 'new-feature' to start at the latest commit of 'main'</span>
+git rebase main</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="remote" class="command-section">
+            <h2>Remotes & Collaboration</h2>
+
+            <div class="command-card">
+                <div class="command-header">git remote</div>
+                <div class="command-body">
+                    <p>Manages the set of tracked remote repositories. You can add, remove, and view your connections to other repositories.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git remote [-v]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># List all remote connections</span>
+git remote
+
+<span class="comment"># List remotes with their URLs (verbose)</span>
+git remote -v
+
+<span class="comment"># Add a new remote connection named 'origin'</span>
+git remote add origin https://github.com/owner/project.git
+
+<span class="comment"># Remove a remote</span>
+git remote remove origin</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git fetch</div>
+                <div class="command-body">
+                    <p>Downloads all history (commits, branches, tags) from a remote repository but does not integrate any of it into your local working directory. It lets you see what others have been working on without changing your own files.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git fetch [remote-name]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Fetch all updates from the 'origin' remote</span>
+git fetch origin</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git pull</div>
+                <div class="command-body">
+                    <p>A combination of `git fetch` and `git merge`. It fetches changes from a remote repository and immediately tries to merge them into your current branch.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git pull [remote-name] [branch-name]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Fetch and merge changes from the 'origin' remote's 'main' branch</span>
+git pull origin main</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git push</div>
+                <div class="command-body">
+                    <p>Uploads your local branch commits to a remote repository. This is how you share your work with others.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git push [remote-name] [branch-name]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Push the 'main' branch to the 'origin' remote</span>
+git push origin main
+
+<span class="comment"># Set the upstream for the current branch so you can use 'git push' in the future</span>
+git push -u origin main</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="inspect" class="command-section">
+            <h2>Inspect & Compare</h2>
+
+            <div class="command-card">
+                <div class="command-header">git log</div>
+                <div class="command-body">
+                    <p>Shows the commit history for the current branch. It's highly customizable with many options to format the output.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git log [options]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Show the full commit history</span>
+git log
+
+<span class="comment"># Show a condensed log on one line per commit</span>
+git log --oneline
+
+<span class="comment"># Show a graph of the branch history</span>
+git log --graph --oneline --decorate --all</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git diff</div>
+                <div class="command-body">
+                    <p>Shows the differences between commits, branches, or files. It's incredibly powerful for seeing what has changed.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git diff [target]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Show changes in the working directory that are not yet staged</span>
+git diff
+
+<span class="comment"># Show changes that are staged but not yet committed</span>
+git diff --staged
+
+<span class="comment"># Show changes between two branches</span>
+git diff main..feature-branch</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="undo" class="command-section">
+            <h2>Undo Changes</h2>
+
+            <div class="command-card">
+                <div class="command-header">git restore</div>
+                <div class="command-body">
+                    <p>The modern, safe command for discarding changes. It can be used to unstage files or discard local modifications in the working directory.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git restore [--source] &lt;file-name&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Discard changes in a file in your working directory</span>
+git restore index.html
+
+<span class="comment"># Unstage a file (move it from staged back to unstaged)</span>
+git restore --staged style.css</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git reset</div>
+                <div class="command-body">
+                    <p>A powerful and versatile command for undoing changes, primarily by moving the `HEAD` pointer to a previous commit. **Warning:** Can be destructive if used incorrectly, especially with `--hard`.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git reset [--soft | --mixed | --hard] &lt;commit-hash&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Unstage all files, but leave them in the working directory (--mixed is default)</span>
+git reset
+
+<span class="comment"># Move HEAD back one commit, keeping changes in the working directory</span>
+git reset HEAD~1
+
+<span class="comment"># !! DANGER !! Move HEAD back one commit and discard all changes</span>
+git reset --hard HEAD~1</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git revert</div>
+                <div class="command-body">
+                    <p>Creates a new commit that undoes the changes from a previous commit. This is the safest way to undo changes on a public, shared branch because it doesn't alter the project history.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git revert &lt;commit-hash&gt;</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Create a new commit that reverses the changes from the specified commit</span>
+git revert a1b2c3d4</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section id="advanced" class="command-section">
+            <h2>Advanced Tools</h2>
+
+            <div class="command-card">
+                <div class="command-header">git stash</div>
+                <div class="command-body">
+                    <p>Temporarily shelves (or "stashes") changes you've made to your working copy so you can work on something else, and then come back and re-apply them later on.</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git stash [push | pop | apply | list]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Stash your current uncommitted changes</span>
+git stash
+
+<span class="comment"># List all your stashes</span>
+git stash list
+
+<span class="comment"># Re-apply the most recent stash and remove it from the stash list</span>
+git stash pop</code></pre>
+                </div>
+            </div>
+
+            <div class="command-card">
+                <div class="command-header">git tag</div>
+                <div class="command-body">
+                    <p>Used to mark specific points in a repository's history as being important, typically for version releases (e.g., `v1.0`).</p>
+                    <h4>Syntax</h4>
+                    <pre><code>git tag [-a | -m] &lt;tag-name&gt; [commit-hash]</code></pre>
+                    <h4>Example</h4>
+                    <pre><code class="language-bash"><span class="comment"># Create a lightweight tag at the current commit</span>
+git tag v1.0.1
+
+<span class="comment"># Create an annotated tag with a message</span>
+git tag -a v1.1 -m "Version 1.1 release"
+
+<span class="comment"># Push all tags to the remote repository</span>
+git push --tags</code></pre>
+                </div>
+            </div>
+
+        </section>
+
+    </main>
+</body>
+</html>
